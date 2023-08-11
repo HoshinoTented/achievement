@@ -38,11 +38,11 @@ object AchievementMain {
     .filterNot { it.isCompleted }
   
   // TODO: fancy ui!!
-  fun onComplete(ache : Achievement) {
-    if (!ache.isCompleted) {
-      ache.isCompleted = true
+  fun onComplete(achi : Achievement) {
+    if (!achi.isCompleted) {
+      achi.isCompleted = true
       val notification = AchievementNotification.achievement
-        .createNotification(ache.name, ache.description, NotificationType.INFORMATION)
+        .createNotification(achi.name, achi.description, NotificationType.INFORMATION)
       try {
         DataManager.getInstance().dataContextFromFocusAsync
           .then {
@@ -53,7 +53,7 @@ object AchievementMain {
         LOG.error(e)
       }
     } else {
-      LOG.warn("Achievement ${ache.id} was completed twice, something is wrong.")
+      LOG.warn("Achievement ${achi.id} was completed twice, something is wrong.")
     }
   }
 }
