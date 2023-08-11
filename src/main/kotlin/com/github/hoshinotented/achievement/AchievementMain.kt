@@ -18,22 +18,29 @@ import java.util.concurrent.TimeoutException
 object AchievementMain {
   val LOG = Logger.getInstance(AchievementMain::class.java)
   
-  fun achievements() : Seq<Achievement> = Seq.of(
+  val achievements : Seq<Achievement> = Seq.of(
     FirstStartUp()
   )
   
-  fun projectAchieve() : SeqView<ProjectAchievement> = achievements().view()
+  init {
+    achievements.forEach {
+      val data = AchievementData.INSTANCE.myState.data[it.id] ?: return@forEach
+      it.deserialize(data)
+    }
+  }
+  
+  fun projectAchieve() : SeqView<ProjectAchievement> = achievements.view()
     .filterIsInstance(ProjectAchievement::class.java)
     .filterNot { it.isCompleted }
   
-  fun applicationAchieve() : SeqView<ApplicationAchievement> = achievements().view()
+  fun applicationAchieve() : SeqView<ApplicationAchievement> = achievements.view()
     .filterIsInstance(ApplicationAchievement::class.java)
     .filterNot { it.isCompleted }
   
   // TODO: fancy ui!!
   fun onComplete(ache : Achievement) {
     if (!ache.isCompleted) {
-      AchievementData.INSTANCE.complete(ache)
+      ache.isCompleted = true
       val notification = AchievementNotification.achievement
         .createNotification(ache.name, ache.description, NotificationType.INFORMATION)
       try {

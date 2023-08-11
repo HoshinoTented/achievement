@@ -1,6 +1,6 @@
 package com.github.hoshinotented.achievement.services
 
-import com.github.hoshinotented.achievement.core.Achievement
+import com.github.hoshinotented.achievement.AchievementMain
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
@@ -11,32 +11,37 @@ import com.intellij.util.xmlb.XmlSerializerUtil
   name = "com.github.hoshinotented.achievement.services.AchievementData",
   storages = [Storage("achievementData.xml")]
 )
-class AchievementData : PersistentStateComponent<AchievementData> {
+class AchievementData : PersistentStateComponent<AchievementData.MyState> {
   companion object {
     val INSTANCE : AchievementData get() = ApplicationManager.getApplication().getService(AchievementData::class.java)
     const val KEY_COMPLETED : String = "isCompleted"
+    const val KEY_PROGRESS : String = "progress"
   }
   
-  val data : MutableMap<String, MutableMap<String, String>> = HashMap()
-  
-  fun complete(ache : Achievement) {
-    val acheData = data.getOrElse(ache.id) { HashMap() }
-    acheData[KEY_COMPLETED] = true.toString()
-    data[ache.id] = acheData
+  class MyState {
+    var data : MutableMap<String, MutableMap<String, String>> = HashMap()
   }
   
-  fun isComplete(ache : Achievement) : Boolean {
-    return data[ache.id]?.get(KEY_COMPLETED)?.toBooleanStrictOrNull() ?: false
-  }
+  var myState : MyState = MyState()
   
   /// region override
   
-  override fun getState() : AchievementData {
-    return this
+  override fun getState() : MyState {
+    val newState = MyState()
+    // on save
+    // collect data
+    AchievementMain.achievements.forEach {
+      val innerData = HashMap<String, String>()
+      it.serialize(innerData)
+      
+      newState.data[it.id] = innerData
+    }
+    
+    return newState
   }
   
-  override fun loadState(state : AchievementData) {
-    XmlSerializerUtil.copyBean(state, this)
+  override fun loadState(state : MyState) {
+    XmlSerializerUtil.copyBean(state, this.myState)
   }
   
   /// endregion override

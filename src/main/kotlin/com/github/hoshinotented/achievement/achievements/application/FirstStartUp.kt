@@ -7,10 +7,15 @@ import com.intellij.openapi.application.ApplicationManager
 
 @AchievementMarker
 class FirstStartUp : ApplicationAchievement {
-  override val id : String get() = "application.firstStartUp"
-  override val name : String get() = "First Start Up!"
-  override val description : String get() = "Welcome to IntelliJ IDEA"
-  override val isHidden : Boolean get() = false
+  override val id : String = "application.firstStartUp"
+  
+  override val name : String = "First Start Up!"
+  
+  override val description : String = "Welcome to IntelliJ IDEA"
+  
+  override val isHidden : Boolean = false
+  
+  override var isCompleted : Boolean = false
   
   override suspend fun init() {
     ApplicationManager.getApplication().invokeLater {

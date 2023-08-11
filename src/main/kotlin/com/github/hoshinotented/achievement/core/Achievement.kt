@@ -52,12 +52,34 @@ interface Achievement {
    */
   val isHidden : Boolean
   
-  val isCompleted : Boolean
-    get() {
-      return AchievementData.INSTANCE.isComplete(this)
-    }
+  var isCompleted : Boolean
   
   val type : Type
+  
+  fun serialize(map : MutableMap<String, String>) {
+    map[AchievementData.KEY_COMPLETED] = isCompleted.toString()
+  }
+  
+  fun deserialize(map : Map<String, String>) {
+    this.isCompleted = map[AchievementData.KEY_COMPLETED]?.toBooleanStrictOrNull() ?: false
+  }
+}
+
+interface ProgressAchievement : Achievement {
+  var current : Int
+  val target : Int
+  
+  override val progress : String get() = "$current of $target"
+  
+  override fun serialize(map : MutableMap<String, String>) {
+    super.serialize(map)
+    map[AchievementData.KEY_PROGRESS] = current.toString()
+  }
+  
+  override fun deserialize(map : Map<String, String>) {
+    super.deserialize(map)
+    this.current = map[AchievementData.KEY_PROGRESS]?.toIntOrNull() ?: 0
+  }
 }
 
 interface ProjectAchievement : Achievement {
