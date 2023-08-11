@@ -14,5 +14,10 @@
         <postStartupActivity implementation="com.github.hoshinotented.achievement.OnProjectStartup"/>
         <notificationGroup displayType="BALLOON"
                            id="com.github.hoshinotented.achievement.notification.AchievementNotification"/>
+        <applicationConfigurable
+                parentId="tools"
+                instance="com.github.hoshinotented.achievement.ui.AchievementListUi"
+                id="com.github.hoshinotented.achievement.ui.AchievementListUi"
+        />
     </extensions>
 </idea-plugin>

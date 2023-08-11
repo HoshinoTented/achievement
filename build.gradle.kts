@@ -16,6 +16,12 @@ plugins {
 group = properties("pluginGroup").get()
 version = properties("pluginVersion").get()
 
+sourceSets {
+  main {
+    java.srcDirs("src/main/kotlin")
+  }
+}
+
 // Configure project's dependencies
 repositories {
     mavenCentral()
