@@ -30,6 +30,7 @@ object AchievementMain {
     .filterIsInstance(ApplicationAchievement::class.java)
     .filterNot { it.isCompleted }
   
+  // TODO: fancy ui!!
   fun onComplete(ache : Achievement) {
     if (!ache.isCompleted) {
       AchievementData.INSTANCE.complete(ache)
