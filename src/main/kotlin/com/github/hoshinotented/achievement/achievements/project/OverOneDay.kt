@@ -1,6 +1,7 @@
-package com.github.hoshinotented.achievement.achievements.application
+package com.github.hoshinotented.achievement.achievements.project
 
-import com.github.hoshinotented.achievement.AchievementMain
+import com.github.hoshinotented.achievement.AchievementPlugin
+import com.github.hoshinotented.achievement.achievements.application.AbstractAchievement
 import com.github.hoshinotented.achievement.core.ProjectAchievement
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
@@ -14,7 +15,7 @@ import kotlin.time.Duration.Companion.days
 class OverOneDay : AbstractAchievement(
   "project.overOneDay",
   "Over 24 hours",
-  "Coding over 24 hours, I am worried about your health...",
+  "Coding over 24 hours, I am worry about your health...",
   false
 ), ProjectAchievement {
   val coroutineScope = CoroutineScope(EmptyCoroutineContext)
@@ -41,7 +42,7 @@ class OverOneDay : AbstractAchievement(
       if (isCompleted) return@invokeLater
       val thisJob = job
       if (thisJob == null || thisJob.isCompleted) {
-        if (thisJob?.isCompleted == true) AchievementMain.LOG.warn("NotNull Completed Job")
+        if (thisJob?.isCompleted == true) AchievementPlugin.LOG.warn("NotNull Completed Job")
         job = coroutineScope.launch {
           delay(1.days)
           onComplete()
@@ -52,12 +53,16 @@ class OverOneDay : AbstractAchievement(
   
   fun onComplete() {
     invokeLater {
-      messageBus.disconnect()
-      AchievementMain.onComplete(this@OverOneDay)
+      AchievementPlugin.onComplete(this@OverOneDay)
     }
   }
   
   fun invokeLater(block : suspend CoroutineScope.() -> Unit) {
     coroutineScope.launch(context = coroutineContext, block = block)
+  }
+  
+  override fun dispose() {
+    messageBus.disconnect()
+    coroutineScope.cancel()
   }
 }

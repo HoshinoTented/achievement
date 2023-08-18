@@ -1,6 +1,6 @@
 package com.github.hoshinotented.achievement.achievements.application
 
-import com.github.hoshinotented.achievement.AchievementMain
+import com.github.hoshinotented.achievement.AchievementPlugin
 import com.github.hoshinotented.achievement.core.AchievementMarker
 import com.github.hoshinotented.achievement.core.ApplicationAchievement
 import com.intellij.openapi.application.ApplicationManager
@@ -19,7 +19,10 @@ class FirstStartUp : ApplicationAchievement {
   
   override suspend fun init() {
     ApplicationManager.getApplication().invokeLater {
-      AchievementMain.onComplete(this)
+      AchievementPlugin.onComplete(this)
     }
+  }
+  
+  override fun dispose() {
   }
 }

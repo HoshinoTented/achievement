@@ -1,8 +1,9 @@
 package com.github.hoshinotented.achievement.core
 
-import com.github.hoshinotented.achievement.AchievementMain
+import com.github.hoshinotented.achievement.AchievementPlugin
 import com.github.hoshinotented.achievement.Bundle
 import com.github.hoshinotented.achievement.services.AchievementData
+import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import org.jetbrains.annotations.Nls
 
@@ -13,9 +14,9 @@ import org.jetbrains.annotations.Nls
  *
  * 1. Achievements are initialized when open idea/project (according their [Achievement.Type]s)
  * 2. Achievements should setup listener during initializing
- * 3. Once an achievement is completed, achievement should stop their listener, sets [isCompleted] true, and runs [AchievementMain.onComplete]
+ * 3. Once an achievement is completed, achievement should stop their listener, sets [isCompleted] true, and runs [AchievementPlugin.onComplete]
  */
-interface Achievement {
+interface Achievement : Disposable {
   
   /**
    * Type of [Achievement]

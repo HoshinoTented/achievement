@@ -1,6 +1,5 @@
 package com.github.hoshinotented.achievement
 
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.StartupActivity
 import kotlinx.coroutines.runBlocking
@@ -11,21 +10,21 @@ class OnProjectStartup : StartupActivity {
   
   override fun runActivity(project : Project) {
     if (!applicationStartup.getAndSet(true)) {
-      AchievementMain.applicationAchieve().forEach {
-        AchievementMain.LOG.info("Initializing application achievement ${it.name} (${it.id})")
+      AchievementPlugin.applicationAchieve().forEach {
+        AchievementPlugin.LOG.info("Initializing application achievement ${it.name} (${it.id})")
         runBlocking {
           it.init()
         }
-        AchievementMain.LOG.info("Initialized application achievement ${it.name} (${it.id})")
+        AchievementPlugin.LOG.info("Initialized application achievement ${it.name} (${it.id})")
       }
     }
     
-    AchievementMain.projectAchieve().forEach {
-      AchievementMain.LOG.info("Initializing project achievement ${it.name} (${it.id})")
+    AchievementPlugin.projectAchieve().forEach {
+      AchievementPlugin.LOG.info("Initializing project achievement ${it.name} (${it.id})")
       runBlocking {   // Any meaning?
         it.init(project)
       }
-      AchievementMain.LOG.info("Initialized project achievement ${it.name} (${it.id})")
+      AchievementPlugin.LOG.info("Initialized project achievement ${it.name} (${it.id})")
     }
   }
 }
