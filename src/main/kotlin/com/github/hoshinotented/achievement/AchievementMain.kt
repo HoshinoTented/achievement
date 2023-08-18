@@ -1,6 +1,7 @@
 package com.github.hoshinotented.achievement
 
 import com.github.hoshinotented.achievement.achievements.application.FirstStartUp
+import com.github.hoshinotented.achievement.achievements.application.OverOneDay
 import com.github.hoshinotented.achievement.core.Achievement
 import com.github.hoshinotented.achievement.core.ApplicationAchievement
 import com.github.hoshinotented.achievement.core.ProjectAchievement
@@ -19,7 +20,8 @@ object AchievementMain {
   val LOG = Logger.getInstance(AchievementMain::class.java)
   
   val achievements : Seq<Achievement> = Seq.of(
-    FirstStartUp()
+    FirstStartUp(),
+    OverOneDay()
   )
   
   init {

@@ -7,10 +7,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.project.ProjectManagerListener
 import com.intellij.util.messages.MessageBusConnection
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.coroutines.EmptyCoroutineContext
@@ -22,9 +19,9 @@ class OverOneDay : AbstractAchievement(
   "Coding over 24 hours, I am worried about your health...",
   false
 ), ProjectAchievement {
-  
+  val coroutineScope = CoroutineScope(EmptyCoroutineContext)
+  val coroutineContext = newSingleThreadContext("OverOneDay")
   val messageBus : MessageBusConnection = ApplicationManager.getApplication().messageBus.connect()
-  val mutex = Mutex(false)
   var job : Job? = null
   
   init {
@@ -32,10 +29,9 @@ class OverOneDay : AbstractAchievement(
       override fun projectClosed(project : Project) {
         val reset = ProjectManager.getInstance().openProjects.isEmpty()
         if (reset) {
-          CoroutineScope(EmptyCoroutineContext).launch {
-            mutex.withLock(this@OverOneDay) {
-              job?.cancel()
-            }
+          invokeLater {
+            job?.cancel()
+            job = null
           }
         }
       }
@@ -43,10 +39,12 @@ class OverOneDay : AbstractAchievement(
   }
   
   override suspend fun init(project : Project) {
-    mutex.withLock(this) {
-      if (isCompleted) return@withLock
-      if (job == null) {
-        job = CoroutineScope(EmptyCoroutineContext).launch {
+    invokeLater {
+      if (isCompleted) return@invokeLater
+      val thisJob = job
+      if (thisJob == null || thisJob.isCompleted) {
+        if (thisJob?.isCompleted == true) AchievementMain.LOG.warn("NotNull Completed Job")
+        job = coroutineScope.launch {
           delay(1.days)
           onComplete()
         }
@@ -54,10 +52,14 @@ class OverOneDay : AbstractAchievement(
     }
   }
   
-  suspend fun onComplete() {
-    mutex.withLock(this) {
+  fun onComplete() {
+    invokeLater {
       messageBus.disconnect()
-      AchievementMain.onComplete(this)
+      AchievementMain.onComplete(this@OverOneDay)
     }
+  }
+  
+  fun invokeLater(block : suspend CoroutineScope.() -> Unit) {
+    coroutineScope.launch(context = coroutineContext, block = block)
   }
 }
