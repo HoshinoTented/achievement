@@ -12,9 +12,9 @@ import org.jetbrains.annotations.Nls
  *
  * ## Lifecycle
  *
- * 1. Achievements are initialized when open idea/project (according their [Achievement.Type]s)
+ * 1. Achievements are initialized when open idea/project (according to their [Achievement.Type]s)
  * 2. Achievements should setup listener during initializing
- * 3. Once an achievement is completed, achievement should stop their listener, sets [isCompleted] true, and runs [AchievementPlugin.onComplete]
+ * 3. Once an achievement is completed, calls [AchievementPlugin.complete], and dispose everything in [Disposable.dispose]
  */
 interface Achievement : Disposable {
   

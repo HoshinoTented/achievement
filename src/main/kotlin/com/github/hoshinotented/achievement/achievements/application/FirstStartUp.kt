@@ -19,7 +19,7 @@ class FirstStartUp : ApplicationAchievement {
   
   override suspend fun init() {
     ApplicationManager.getApplication().invokeLater {
-      AchievementPlugin.onComplete(this)
+      AchievementPlugin.complete(this)
     }
   }
   

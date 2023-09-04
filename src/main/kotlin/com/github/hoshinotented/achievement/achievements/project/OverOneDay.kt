@@ -1,7 +1,7 @@
 package com.github.hoshinotented.achievement.achievements.project
 
 import com.github.hoshinotented.achievement.AchievementPlugin
-import com.github.hoshinotented.achievement.achievements.application.AbstractAchievement
+import com.github.hoshinotented.achievement.achievements.AbstractAchievement
 import com.github.hoshinotented.achievement.core.ProjectAchievement
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
@@ -53,7 +53,7 @@ class OverOneDay : AbstractAchievement(
   
   fun onComplete() {
     invokeLater {
-      AchievementPlugin.onComplete(this@OverOneDay)
+      AchievementPlugin.complete(this@OverOneDay)
     }
   }
   

@@ -1,4 +1,4 @@
-package com.github.hoshinotented.achievement.achievements.application
+package com.github.hoshinotented.achievement.achievements
 
 import com.github.hoshinotented.achievement.Bundle
 import com.github.hoshinotented.achievement.core.Achievement

@@ -1,6 +1,7 @@
 package com.github.hoshinotented.achievement.achievements.application
 
 import com.github.hoshinotented.achievement.AchievementPlugin
+import com.github.hoshinotented.achievement.achievements.AbstractAchievement
 import com.github.hoshinotented.achievement.core.ApplicationAchievement
 import com.github.hoshinotented.achievement.core.ProgressAchievement
 import com.intellij.openapi.editor.EditorFactory
@@ -39,7 +40,7 @@ class Typer : AbstractAchievement(
       
       if (result >= TARGET) {
         if (!atom.getAndSet(true)) {
-          AchievementPlugin.onComplete(typer)
+          AchievementPlugin.complete(typer)
         }
       }
     }

@@ -2,6 +2,7 @@ package com.github.hoshinotented.achievement
 
 import com.github.hoshinotented.achievement.achievements.application.FirstStartUp
 import com.github.hoshinotented.achievement.achievements.application.Typer
+import com.github.hoshinotented.achievement.achievements.application.YuanShen
 import com.github.hoshinotented.achievement.achievements.project.OverOneDay
 import com.github.hoshinotented.achievement.core.Achievement
 import com.github.hoshinotented.achievement.core.ApplicationAchievement
@@ -31,7 +32,8 @@ class AchievementPlugin : Disposable {
     val achievements : Seq<Achievement> = Seq.of(
       FirstStartUp(),
       OverOneDay(),
-      Typer()
+      Typer(),
+      YuanShen()
     )
     
     init {
@@ -53,7 +55,7 @@ class AchievementPlugin : Disposable {
       .filterNot { it.isCompleted }
     
     // TODO: fancy ui!!
-    fun onComplete(achi : Achievement) {
+    fun complete(achi : Achievement) {
       if (!achi.isCompleted) {
         achi.isCompleted = true
         Disposer.dispose(achi)
@@ -69,6 +71,8 @@ class AchievementPlugin : Disposable {
         } catch (e : TimeoutException) {
           LOG.error(e)
         }
+        
+        LOG.info("Achievement ${achi.id} completed.")
       } else {
         LOG.warn("Achievement ${achi.id} was completed twice, something is wrong.")
       }
