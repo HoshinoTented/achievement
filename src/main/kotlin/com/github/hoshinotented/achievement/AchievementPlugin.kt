@@ -18,12 +18,16 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.util.Disposer
 import kala.collection.Seq
 import kala.collection.SeqView
+import org.quartz.Scheduler
+import org.quartz.impl.StdSchedulerFactory
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 class AchievementPlugin : Disposable {
   companion object {
     val LOG = Logger.getInstance(AchievementPlugin::class.java)
+    
+    val SCHEDULER : Scheduler = StdSchedulerFactory.getDefaultScheduler()
     
     val INSTANCE : AchievementPlugin
       get() = ApplicationManager.getApplication()

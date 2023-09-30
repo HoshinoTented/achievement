@@ -9,6 +9,9 @@ import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.project.ProjectManagerListener
 import com.intellij.util.messages.MessageBusConnection
 import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
+import org.quartz.*
+import java.util.*
 import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.time.Duration.Companion.days
 
@@ -17,52 +20,50 @@ class OverOneDay : AbstractAchievement(
   "Over 24 hours",
   "Coding over 24 hours, I am worry about your health...",
   false
-), ProjectAchievement {
-  val coroutineScope = CoroutineScope(EmptyCoroutineContext)
-  val coroutineContext = newSingleThreadContext("OverOneDay")
-  val messageBus : MessageBusConnection = ApplicationManager.getApplication().messageBus.connect()
-  var job : Job? = null
+), ProjectAchievement, org.quartz.Job {
+  private val messageBus : MessageBusConnection = ApplicationManager.getApplication().messageBus.connect()
+  private val jobKey : JobKey = JobKey.jobKey("overOneDay", "achievements")
+  private val myJob : JobDetail = JobBuilder.newJob(OverOneDay::class.java)
+    .withIdentity(jobKey)
+    .build()
+  
+  private val trigger : Trigger = TriggerBuilder.newTrigger()
+    .startAt(Date(System.currentTimeMillis() + 1.days.inWholeMilliseconds))
+    .build()
   
   init {
     messageBus.subscribe(ProjectManager.TOPIC, object : ProjectManagerListener {
       override fun projectClosed(project : Project) {
         val reset = ProjectManager.getInstance().openProjects.isEmpty()
         if (reset) {
-          invokeLater {
-            job?.cancel()
-            job = null
+          synchronized(this@OverOneDay) {
+            AchievementPlugin.SCHEDULER.deleteJob(jobKey)
           }
         }
       }
     })
   }
   
+  override fun execute(context : JobExecutionContext?) {
+    onComplete()
+  }
+  
   override suspend fun init(project : Project) {
-    invokeLater {
-      if (isCompleted) return@invokeLater
-      val thisJob = job
-      if (thisJob == null || thisJob.isCompleted) {
-        if (thisJob?.isCompleted == true) AchievementPlugin.LOG.warn("NotNull Completed Job")
-        job = coroutineScope.launch {
-          delay(1.days)
-          onComplete()
-        }
+    synchronized(this) {
+      if (!isCompleted && !AchievementPlugin.SCHEDULER.checkExists(jobKey)) {
+        AchievementPlugin.SCHEDULER.scheduleJob(myJob, trigger)
       }
     }
   }
   
-  fun onComplete() {
-    invokeLater {
+  private fun onComplete() {
+    synchronized(this) {
       AchievementPlugin.complete(this@OverOneDay)
     }
   }
   
-  fun invokeLater(block : suspend CoroutineScope.() -> Unit) {
-    coroutineScope.launch(context = coroutineContext, block = block)
-  }
-  
   override fun dispose() {
     messageBus.disconnect()
-    coroutineScope.cancel()
+    AchievementPlugin.SCHEDULER.deleteJob(jobKey)
   }
 }

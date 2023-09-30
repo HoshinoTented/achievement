@@ -8,9 +8,11 @@ changelog = "2.1.2"
 gradleIntelliJPlugin = "1.15.0"
 qodana = "0.1.13"
 kover = "0.7.3"
+quartz = "2.3.2"
 
 [libraries]
 annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
+quartz = { group = "org.quartz-scheduler", name = "quartz", version.ref = "quartz" }
 
 [plugins]
 changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
