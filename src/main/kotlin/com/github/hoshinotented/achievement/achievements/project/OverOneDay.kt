@@ -8,11 +8,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.project.ProjectManagerListener
 import com.intellij.util.messages.MessageBusConnection
-import kotlinx.coroutines.*
-import kotlinx.coroutines.Job
 import org.quartz.*
 import java.util.*
-import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.time.Duration.Companion.days
 
 class OverOneDay : AbstractAchievement(
@@ -20,16 +17,19 @@ class OverOneDay : AbstractAchievement(
   "Over 24 hours",
   "Coding over 24 hours, I am worry about your health...",
   false
-), ProjectAchievement, org.quartz.Job {
-  private val messageBus : MessageBusConnection = ApplicationManager.getApplication().messageBus.connect()
-  private val jobKey : JobKey = JobKey.jobKey("overOneDay", "achievements")
-  private val myJob : JobDetail = JobBuilder.newJob(OverOneDay::class.java)
-    .withIdentity(jobKey)
-    .build()
+), ProjectAchievement, Job {
+  companion object {
+    private val jobKey: JobKey = JobKey.jobKey("overOneDay", "achievements")
+    private val myJob: JobDetail = JobBuilder.newJob(OverOneDay::class.java)
+      .withIdentity(jobKey)
+      .build()
+    
+    private val trigger: Trigger = TriggerBuilder.newTrigger()
+      .startAt(Date(System.currentTimeMillis() + 1.days.inWholeMilliseconds))
+      .build()
+  }
   
-  private val trigger : Trigger = TriggerBuilder.newTrigger()
-    .startAt(Date(System.currentTimeMillis() + 1.days.inWholeMilliseconds))
-    .build()
+  private val messageBus: MessageBusConnection = ApplicationManager.getApplication().messageBus.connect()
   
   init {
     messageBus.subscribe(ProjectManager.TOPIC, object : ProjectManagerListener {

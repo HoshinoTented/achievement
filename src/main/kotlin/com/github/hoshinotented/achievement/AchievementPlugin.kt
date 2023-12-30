@@ -41,13 +41,14 @@ class AchievementPlugin : Disposable {
     )
     
     init {
-      achievements.forEach {
-        val data = AchievementData.INSTANCE.myState.data[it.id] ?: return@forEach
-        it.deserialize(data)
-        
-        // disposer
-        Disposer.register(INSTANCE, it)
-      }
+      achievements.forEach(::initializeAchieve)
+    }
+    
+    fun initializeAchieve(achi: Achievement) {
+      val data = AchievementData.INSTANCE.myState.data[achi.id] ?: return
+      achi.deserialize(data)
+      
+      Disposer.register(INSTANCE, achi)
     }
     
     fun projectAchieve() : SeqView<ProjectAchievement> = achievements.view()
@@ -76,9 +77,9 @@ class AchievementPlugin : Disposable {
           LOG.error(e)
         }
         
-        LOG.info("Achievement ${achi.id} completed.")
+        LOG.info("Achievement ${achi.id} is completed.")
       } else {
-        LOG.warn("Achievement ${achi.id} was completed twice, something is wrong.")
+        LOG.warn("Achievement ${achi.id} is completed twice, something is wrong.")
       }
     }
   }

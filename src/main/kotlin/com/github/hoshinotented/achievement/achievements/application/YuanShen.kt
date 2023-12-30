@@ -3,50 +3,49 @@ package com.github.hoshinotented.achievement.achievements.application
 import com.github.hoshinotented.achievement.AchievementPlugin
 import com.github.hoshinotented.achievement.achievements.AbstractAchievement
 import com.github.hoshinotented.achievement.core.ApplicationAchievement
+import com.github.hoshinotented.achievement.util.runCommand
 import com.intellij.openapi.util.Disposer
-import kotlinx.coroutines.*
+import org.quartz.Job
+import org.quartz.JobBuilder
+import org.quartz.JobExecutionContext
+import org.quartz.JobKey
+import org.quartz.SimpleScheduleBuilder
+import org.quartz.TriggerBuilder
 import java.util.concurrent.TimeUnit
-import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.time.Duration.Companion.minutes
 
 class YuanShen : AbstractAchievement(
   "application.yuanShen",
   false
-), ApplicationAchievement {
+), ApplicationAchievement, Job {
   companion object {
-    val SCOPE : CoroutineScope = CoroutineScope(EmptyCoroutineContext)
     val COMMAND : Array<String> = arrayOf("PowerShell.exe", "-Command", "Get-Process YuanShen")
+    private val jobKey = JobKey.jobKey("yuanShen", "achievements")
+    private val jobDetail = JobBuilder.newJob(YuanShen::class.java)
+      .withIdentity(jobKey)
+      .build()
+    private val trigger = TriggerBuilder.newTrigger()
+      .startNow()
+      .withSchedule(
+        SimpleScheduleBuilder.simpleSchedule()
+          .withIntervalInMinutes(1)
+      )
+      .build()
   }
   
-  @Volatile
-  var job : Job? = null
+  // TODO: what if this function takes 1 minutes?
+  override fun execute(context: JobExecutionContext?) {
+    val exitCode = runCommand(COMMAND)
+    if (exitCode == 0) {
+      AchievementPlugin.complete(this)
+    }
+  }
   
   override suspend fun init() {
-    job = SCOPE.launch {
-      while (isActive) {
-        delay(1.minutes)
-        
-        val process = Runtime.getRuntime().exec(COMMAND)
-        val exited = process.waitFor(5, TimeUnit.SECONDS)
-        
-        if (!exited) {
-          AchievementPlugin.LOG.error("Command execution timeout")
-          Disposer.dispose(this@YuanShen)
-          break
-        } else {
-          if (process.exitValue() == 0) {
-            // YuanShen is running
-            AchievementPlugin.complete(this@YuanShen)
-            break
-          }
-        }
-      }
-    }
+    AchievementPlugin.SCHEDULER.scheduleJob(jobDetail, trigger)
   }
   
   override fun dispose() {
-    runBlocking {
-      job?.cancelAndJoin()
-    }
+    AchievementPlugin.SCHEDULER.deleteJob(jobKey)
   }
 }
