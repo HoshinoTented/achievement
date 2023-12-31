@@ -1,6 +1,7 @@
 package com.github.hoshinotented.achievement.achievements.project
 
 import com.github.hoshinotented.achievement.achievements.AbstractAchievement
+import com.github.hoshinotented.achievement.achievements.complete
 import com.github.hoshinotented.achievement.core.ProgressAchievement
 import com.github.hoshinotented.achievement.core.ProjectAchievement
 import com.intellij.execution.ExecutionListener
@@ -33,7 +34,10 @@ class BadExecution : AbstractAchievement(
     handler: ProcessHandler,
     exitCode: Int
   ) {
-    if (exitCode != 0) count.incrementAndGet()
+    if (exitCode != 0) {
+      val newCount = count.incrementAndGet()
+      if (newCount == target) complete()
+    }
   }
   
   override suspend fun init(project: Project) {

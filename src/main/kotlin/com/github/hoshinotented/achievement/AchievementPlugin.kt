@@ -3,6 +3,7 @@ package com.github.hoshinotented.achievement
 import com.github.hoshinotented.achievement.achievements.application.FirstStartUp
 import com.github.hoshinotented.achievement.achievements.application.Typer
 import com.github.hoshinotented.achievement.achievements.application.YuanShen
+import com.github.hoshinotented.achievement.achievements.project.BadExecution
 import com.github.hoshinotented.achievement.achievements.project.OverOneDay
 import com.github.hoshinotented.achievement.core.Achievement
 import com.github.hoshinotented.achievement.core.ApplicationAchievement
@@ -37,7 +38,8 @@ class AchievementPlugin : Disposable {
       FirstStartUp(),
       OverOneDay(),
       Typer(),
-      YuanShen()
+      YuanShen(),
+      BadExecution()
     )
     
     init {
