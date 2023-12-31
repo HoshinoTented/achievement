@@ -46,6 +46,18 @@ intellij {
     plugins = properties("platformPlugins").map { it.split(',').map(String::trim).filter(String::isNotEmpty) }
 }
 
+tasks {
+  val setupIde = create<Delete>("setupIde") {
+    delete(layout.buildDirectory.file("idea-sandbox/config/options/achievementData.xml"))
+  }
+  
+  runIde {
+    dependsOn(setupIde)
+  }
+}
+
+/// region Packaging Plugin
+
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
 changelog {
     groups.empty()
@@ -104,3 +116,5 @@ tasks {
         channels = properties("pluginVersion").map { listOf(it.split('-').getOrElse(1) { "default" }.split('.').first()) }
     }
 }
+
+/// endregion Packaging Plugin
