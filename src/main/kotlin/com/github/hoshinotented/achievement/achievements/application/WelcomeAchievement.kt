@@ -6,7 +6,7 @@ import com.github.hoshinotented.achievement.core.ApplicationAchievement
 import com.intellij.openapi.application.ApplicationManager
 
 @AchievementMarker
-class FirstStartUp : ApplicationAchievement {
+class WelcomeAchievement : ApplicationAchievement {
   override val id : String = "application.firstStartUp"
   
   override val name : String = "First Start Up!"

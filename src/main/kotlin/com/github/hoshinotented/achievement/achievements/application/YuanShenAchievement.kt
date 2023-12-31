@@ -10,7 +10,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.minutes
 
-class YuanShen : AbstractAchievement(
+class YuanShenAchievement : AbstractAchievement(
   "application.yuanShen",
   false
 ), ApplicationAchievement {

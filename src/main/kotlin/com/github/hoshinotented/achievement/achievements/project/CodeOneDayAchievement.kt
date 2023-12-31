@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 
-class OverOneDay : AbstractAchievement(
+class CodeOneDayAchievement : AbstractAchievement(
   "project.overOneDay",
   "Over 24 hours",
   "Coding over 24 hours, I am worry about your health...",
@@ -58,7 +58,7 @@ class OverOneDay : AbstractAchievement(
   
   private fun onComplete() {
     synchronized(this) {
-      AchievementPlugin.complete(this@OverOneDay)
+      AchievementPlugin.complete(this@CodeOneDayAchievement)
     }
   }
   

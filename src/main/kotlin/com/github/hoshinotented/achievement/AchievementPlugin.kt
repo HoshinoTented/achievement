@@ -1,10 +1,11 @@
 package com.github.hoshinotented.achievement
 
-import com.github.hoshinotented.achievement.achievements.application.FirstStartUp
-import com.github.hoshinotented.achievement.achievements.application.Typer
-import com.github.hoshinotented.achievement.achievements.application.YuanShen
-import com.github.hoshinotented.achievement.achievements.project.BadExecution
-import com.github.hoshinotented.achievement.achievements.project.OverOneDay
+import com.github.hoshinotented.achievement.achievements.application.WelcomeAchievement
+import com.github.hoshinotented.achievement.achievements.application.TypingAchievement
+import com.github.hoshinotented.achievement.achievements.application.YuanShenAchievement
+import com.github.hoshinotented.achievement.achievements.project.BadExecutionAchievement
+import com.github.hoshinotented.achievement.achievements.project.OpenAyaWithoutAyaPluginAchievement
+import com.github.hoshinotented.achievement.achievements.project.CodeOneDayAchievement
 import com.github.hoshinotented.achievement.core.Achievement
 import com.github.hoshinotented.achievement.core.ApplicationAchievement
 import com.github.hoshinotented.achievement.core.ProjectAchievement
@@ -35,11 +36,12 @@ class AchievementPlugin : Disposable {
         .getService(AchievementPlugin::class.java)
     
     val achievements : Seq<Achievement> = Seq.of(
-      FirstStartUp(),
-      OverOneDay(),
-      Typer(),
-      YuanShen(),
-      BadExecution()
+      WelcomeAchievement(),
+      CodeOneDayAchievement(),
+      TypingAchievement(),
+      YuanShenAchievement(),
+      BadExecutionAchievement(),
+      OpenAyaWithoutAyaPluginAchievement()
     )
     
     init {

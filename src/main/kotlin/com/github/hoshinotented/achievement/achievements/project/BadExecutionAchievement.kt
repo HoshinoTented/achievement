@@ -11,7 +11,7 @@ import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.openapi.project.Project
 import java.util.concurrent.atomic.AtomicInteger
 
-class BadExecution : AbstractAchievement(
+class BadExecutionAchievement : AbstractAchievement(
   "project.badExecution",
   false
 ), ProjectAchievement, ProgressAchievement, ExecutionListener {

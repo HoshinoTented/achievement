@@ -10,7 +10,7 @@ import com.intellij.openapi.editor.event.DocumentEvent
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-class Typer : AbstractAchievement(
+class TypingAchievement : AbstractAchievement(
   "application.typer",
   "Typer",
   "Typing over 10000 characters",
@@ -29,7 +29,7 @@ class Typer : AbstractAchievement(
   
   val count : AtomicInteger = AtomicInteger(0)
   
-  class Listener(val typer : Typer) : BulkAwareDocumentListener {
+  class Listener(val typer: TypingAchievement) : BulkAwareDocumentListener {
     private val atom : AtomicBoolean = AtomicBoolean(false)
     
     override fun documentChangedNonBulk(event : DocumentEvent) {
