@@ -8,7 +8,9 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.project.ProjectManagerListener
 import com.intellij.util.messages.MessageBusConnection
-import org.quartz.*
+import kala.value.AtomicVar
+import kotlinx.coroutines.*
+import kotlinx.datetime.Instant
 import java.util.*
 import kotlin.time.Duration.Companion.days
 
@@ -17,42 +19,36 @@ class OverOneDay : AbstractAchievement(
   "Over 24 hours",
   "Coding over 24 hours, I am worry about your health...",
   false
-), ProjectAchievement, Job {
-  companion object {
-    private val jobKey: JobKey = JobKey.jobKey("overOneDay", "achievements")
-    private val myJob: JobDetail = JobBuilder.newJob(OverOneDay::class.java)
-      .withIdentity(jobKey)
-      .build()
-    
-    private val trigger: Trigger = TriggerBuilder.newTrigger()
-      .startAt(Date(System.currentTimeMillis() + 1.days.inWholeMilliseconds))
-      .build()
-  }
-  
+), ProjectAchievement {
   private val messageBus: MessageBusConnection = ApplicationManager.getApplication().messageBus.connect()
+  private var job: Job? = null
   
   init {
     messageBus.subscribe(ProjectManager.TOPIC, object : ProjectManagerListener {
       override fun projectClosed(project : Project) {
         val reset = ProjectManager.getInstance().openProjects.isEmpty()
         if (reset) {
-          synchronized(this@OverOneDay) {
-            AchievementPlugin.SCHEDULER.deleteJob(jobKey)
-          }
+          onReset()
         }
       }
     })
   }
   
-  override fun execute(context : JobExecutionContext?) {
-    onComplete()
-  }
-  
   override suspend fun init(project : Project) {
     synchronized(this) {
-      if (!isCompleted && !AchievementPlugin.SCHEDULER.checkExists(jobKey)) {
-        AchievementPlugin.SCHEDULER.scheduleJob(myJob, trigger)
+      val mJob = job
+      if (!isCompleted && (mJob == null || !mJob.isActive)) {
+        job = AchievementPlugin.SCOPE.launch {
+          delay(1.days)
+          onComplete()
+        }
       }
+    }
+  }
+  
+  private fun onReset() {
+    synchronized(this) {
+      job?.cancel()
     }
   }
   
@@ -64,6 +60,6 @@ class OverOneDay : AbstractAchievement(
   
   override fun dispose() {
     messageBus.disconnect()
-    AchievementPlugin.SCHEDULER.deleteJob(jobKey)
+    job?.cancel()
   }
 }
