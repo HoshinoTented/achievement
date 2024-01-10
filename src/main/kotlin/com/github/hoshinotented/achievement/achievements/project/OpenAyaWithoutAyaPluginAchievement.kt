@@ -1,7 +1,6 @@
 package com.github.hoshinotented.achievement.achievements.project
 
 import com.github.hoshinotented.achievement.achievements.AbstractAchievement
-import com.github.hoshinotented.achievement.achievements.complete
 import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.fileEditor.FileEditorManager

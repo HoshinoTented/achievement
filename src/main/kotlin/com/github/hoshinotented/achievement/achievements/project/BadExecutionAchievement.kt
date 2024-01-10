@@ -1,7 +1,6 @@
 package com.github.hoshinotented.achievement.achievements.project
 
 import com.github.hoshinotented.achievement.achievements.AbstractAchievement
-import com.github.hoshinotented.achievement.achievements.complete
 import com.github.hoshinotented.achievement.core.ProgressAchievement
 import com.github.hoshinotented.achievement.core.ProjectAchievement
 import com.intellij.execution.ExecutionListener

@@ -1,53 +1,49 @@
 package com.github.hoshinotented.achievement.achievements.application
 
-import com.github.hoshinotented.achievement.AchievementPlugin
 import com.github.hoshinotented.achievement.achievements.AbstractAchievement
 import com.github.hoshinotented.achievement.core.ApplicationAchievement
 import com.github.hoshinotented.achievement.core.ProgressAchievement
-import com.intellij.openapi.editor.EditorFactory
-import com.intellij.openapi.editor.event.BulkAwareDocumentListener
-import com.intellij.openapi.editor.event.DocumentEvent
+import com.intellij.codeInsight.editorActions.TypedHandlerDelegate
+import com.intellij.openapi.actionSystem.DataContext
+import com.intellij.openapi.editor.Editor
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 
-class TypingAchievement : AbstractAchievement(
+class TypingAchievementHandler : TypedHandlerDelegate() {
+  override fun newTypingStarted(c: Char, editor: Editor, context: DataContext) {
+    with(TypingAchievement) {
+      if (initialized.get()) {
+        count += 1
+        println(count)
+        if (count >= target) {
+          complete()
+        }
+      }
+    }
+  }
+}
+
+object TypingAchievement : AbstractAchievement(
   "application.typer",
   "Typer",
   "Typing over 10000 characters",
   false
 ), ApplicationAchievement, ProgressAchievement {
-  companion object {
-    const val TARGET : Int = 10000
-  }
+  
+  const val TARGET: Int = 10000
   
   override val target : Int = TARGET
   override var current : Int
-    get() = count.get()
+    get() = count
     set(value) {
-      count.set(value)
+      count = value
     }
   
-  val count : AtomicInteger = AtomicInteger(0)
+  var count: Int = 0
   
-  class Listener(val typer: TypingAchievement) : BulkAwareDocumentListener {
-    private val atom : AtomicBoolean = AtomicBoolean(false)
-    
-    override fun documentChangedNonBulk(event : DocumentEvent) {
-      println(event.newFragment)
-      
-      val length = event.newLength
-      val result = typer.count.addAndGet(length)
-      
-      if (result >= TARGET) {
-        if (!atom.getAndSet(true)) {
-          AchievementPlugin.complete(typer)
-        }
-      }
-    }
-  }
+  val initialized: AtomicBoolean = AtomicBoolean(false)
   
   override suspend fun init() {
-    EditorFactory.getInstance().eventMulticaster.addDocumentListener(Listener(this), this)
+    initialized.set(true)
   }
   
   override fun dispose() {

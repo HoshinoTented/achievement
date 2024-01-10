@@ -2,7 +2,6 @@ package com.github.hoshinotented.achievement.core
 
 import com.github.hoshinotented.achievement.AchievementPlugin
 import com.github.hoshinotented.achievement.Bundle
-import com.github.hoshinotented.achievement.achievements.complete
 import com.github.hoshinotented.achievement.services.AchievementData
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project

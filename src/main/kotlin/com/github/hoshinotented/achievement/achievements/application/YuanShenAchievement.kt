@@ -2,7 +2,6 @@ package com.github.hoshinotented.achievement.achievements.application
 
 import com.github.hoshinotented.achievement.AchievementPlugin
 import com.github.hoshinotented.achievement.achievements.AbstractAchievement
-import com.github.hoshinotented.achievement.achievements.complete
 import com.github.hoshinotented.achievement.core.ApplicationAchievement
 import com.github.hoshinotented.achievement.util.runCommand
 import kotlinx.coroutines.Job

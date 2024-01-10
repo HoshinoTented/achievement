@@ -1,5 +1,6 @@
 package com.github.hoshinotented.achievement
 
+import com.github.hoshinotented.achievement.achievements.application.AgdaKeybindAchievement
 import com.github.hoshinotented.achievement.achievements.application.WelcomeAchievement
 import com.github.hoshinotented.achievement.achievements.application.TypingAchievement
 import com.github.hoshinotented.achievement.achievements.application.YuanShenAchievement
@@ -38,10 +39,11 @@ class AchievementPlugin : Disposable {
     val achievements : Seq<Achievement> = Seq.of(
       WelcomeAchievement(),
       CodeOneDayAchievement(),
-      TypingAchievement(),
+      TypingAchievement,
       YuanShenAchievement(),
       BadExecutionAchievement(),
-      OpenAyaWithoutAyaPluginAchievement()
+      OpenAyaWithoutAyaPluginAchievement(),
+      AgdaKeybindAchievement
     )
     
     init {

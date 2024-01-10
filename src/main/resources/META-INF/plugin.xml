@@ -21,5 +21,8 @@
                 instance="com.github.hoshinotented.achievement.ui.AchievementListUi"
                 id="com.github.hoshinotented.achievement.ui.AchievementListUi"
         />
+
+        <typedHandler
+                implementation="com.github.hoshinotented.achievement.achievements.application.TypingAchievementHandler"/>
     </extensions>
 </idea-plugin>
