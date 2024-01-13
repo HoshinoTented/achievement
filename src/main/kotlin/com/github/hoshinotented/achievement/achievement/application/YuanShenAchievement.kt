@@ -1,7 +1,7 @@
-package com.github.hoshinotented.achievement.achievements.application
+package com.github.hoshinotented.achievement.achievement.application
 
 import com.github.hoshinotented.achievement.AchievementPlugin
-import com.github.hoshinotented.achievement.achievements.AbstractAchievement
+import com.github.hoshinotented.achievement.achievement.AbstractAchievement
 import com.github.hoshinotented.achievement.core.ApplicationAchievement
 import com.github.hoshinotented.achievement.util.runCommand
 import kotlinx.coroutines.Job
@@ -18,7 +18,7 @@ class YuanShenAchievement : AbstractAchievement(
   }
   
   private var job: Job? = null
-  override suspend fun init() {
+  override fun init() {
     job = AchievementPlugin.SCOPE.launch {
       delay(1.minutes)
       val exitCode = runCommand(COMMAND)

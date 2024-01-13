@@ -10,9 +10,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService
-                serviceImplementation="com.github.hoshinotented.achievement.services.AchievementData"/>
-        <applicationService
-                serviceImplementation="com.github.hoshinotented.achievement.AchievementPlugin"/>
+                serviceImplementation="com.github.hoshinotented.achievement.service.AchievementData"/>
         <postStartupActivity implementation="com.github.hoshinotented.achievement.OnProjectStartup"/>
         <notificationGroup displayType="BALLOON"
                            id="com.github.hoshinotented.achievement.notification.AchievementNotification"/>
@@ -23,6 +21,6 @@
         />
 
         <typedHandler
-                implementation="com.github.hoshinotented.achievement.achievements.application.TypingAchievementHandler"/>
+                implementation="com.github.hoshinotented.achievement.achievement.application.TypingAchievementHandler"/>
     </extensions>
 </idea-plugin>

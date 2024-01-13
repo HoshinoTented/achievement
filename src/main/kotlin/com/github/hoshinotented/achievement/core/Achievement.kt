@@ -1,8 +1,8 @@
 package com.github.hoshinotented.achievement.core
 
-import com.github.hoshinotented.achievement.AchievementPlugin
+import com.github.hoshinotented.achievement.AchievementManager
 import com.github.hoshinotented.achievement.Bundle
-import com.github.hoshinotented.achievement.services.AchievementData
+import com.github.hoshinotented.achievement.service.AchievementData
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import org.jetbrains.annotations.Nls
@@ -12,22 +12,11 @@ import org.jetbrains.annotations.Nls
  *
  * ## Lifecycle
  *
- * 1. Achievements are initialized when open idea/project (according to their [Achievement.Type]s)
+ * 1. Achievements are initialized when open idea/project
  * 2. Achievements should setup listener during initializing
- * 3. Once an achievement is completed, calls [AchievementPlugin.complete], and dispose everything in [Disposable.dispose]
+ * 3. Once an achievement is completed, calls [AchievementManager.completeAchievement], and dispose everything in [Disposable.dispose]
  */
 interface Achievement : Disposable {
-  
-  /**
-   * Type of [Achievement]
-   * * Application: Achievement only initializes once (after first project opens)
-   * * Project: Achievement initializes when a project opens
-   */
-  enum class Type {
-    Application,
-    Project
-  }
-  
   val id : String
   
   /**
@@ -54,8 +43,6 @@ interface Achievement : Disposable {
   val isHidden : Boolean
   
   var isCompleted : Boolean
-  
-  val type : Type
   
   fun serialize(map : MutableMap<String, String>) {
     map[AchievementData.KEY_COMPLETED] = isCompleted.toString()
@@ -84,15 +71,11 @@ interface ProgressAchievement : Achievement {
 }
 
 interface ProjectAchievement : Achievement {
-  override val type : Achievement.Type get() = Achievement.Type.Project
-  
-  suspend fun init(project : Project)
+  fun init(project: Project)
 }
 
 interface ApplicationAchievement : Achievement {
-  override val type : Achievement.Type get() = Achievement.Type.Application
-  
-  suspend fun init()
+  fun init()
 }
 
 @Target(AnnotationTarget.CLASS)

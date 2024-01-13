@@ -1,6 +1,6 @@
-package com.github.hoshinotented.achievement.achievements
+package com.github.hoshinotented.achievement.achievement
 
-import com.github.hoshinotented.achievement.AchievementPlugin
+import com.github.hoshinotented.achievement.AchievementManager
 import com.github.hoshinotented.achievement.Bundle
 import com.github.hoshinotented.achievement.core.Achievement
 
@@ -13,7 +13,7 @@ abstract class AbstractAchievement(
   override var isCompleted : Boolean = false
   
   private val jobComplete: Lazy<Unit> = lazy {
-    AchievementPlugin.complete(this)
+    AchievementManager.INSTANCE.completeAchievement(this)
   }
   
   constructor(id : String, isHidden : Boolean) : this(

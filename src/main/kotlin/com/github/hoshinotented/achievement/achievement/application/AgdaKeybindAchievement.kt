@@ -1,17 +1,11 @@
-package com.github.hoshinotented.achievement.achievements.application
+package com.github.hoshinotented.achievement.achievement.application
 
 import com.github.hoshinotented.achievement.AchievementPlugin
-import com.github.hoshinotented.achievement.achievements.AbstractAchievement
+import com.github.hoshinotented.achievement.achievement.AbstractAchievement
 import com.github.hoshinotented.achievement.core.ApplicationAchievement
 import com.intellij.ide.IdeEventQueue
-import com.intellij.ide.IdeEventQueue.PostEventHook
-import com.intellij.openapi.application.Application
-import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.application.runReadAction
 import kotlinx.coroutines.launch
-import java.awt.AWTEvent
 import java.awt.event.KeyEvent
-import kotlin.system.measureTimeMillis
 
 object AgdaKeybindAchievement : AbstractAchievement("application.agdaKeybind", true), ApplicationAchievement {
   private var ready: Boolean = false
@@ -28,7 +22,7 @@ object AgdaKeybindAchievement : AbstractAchievement("application.agdaKeybind", t
     return e.keyCode == KeyEvent.VK_CONTROL
   }
   
-  override suspend fun init() {
+  override fun init() {
     IdeEventQueue.getInstance().addPostprocessor({
       if (it is KeyEvent && it.id == KeyEvent.KEY_PRESSED) {
         if (!isBlank(it)) {   // ignore single CONTROL pressing

@@ -1,6 +1,6 @@
-package com.github.hoshinotented.achievement.achievements.application
+package com.github.hoshinotented.achievement.achievement.application
 
-import com.github.hoshinotented.achievement.achievements.AbstractAchievement
+import com.github.hoshinotented.achievement.achievement.AbstractAchievement
 import com.github.hoshinotented.achievement.core.ApplicationAchievement
 import com.github.hoshinotented.achievement.core.ProgressAchievement
 import com.intellij.codeInsight.editorActions.TypedHandlerDelegate
@@ -42,7 +42,7 @@ object TypingAchievement : AbstractAchievement(
   
   val initialized: AtomicBoolean = AtomicBoolean(false)
   
-  override suspend fun init() {
+  override fun init() {
     initialized.set(true)
   }
   

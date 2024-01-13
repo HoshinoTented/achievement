@@ -1,6 +1,6 @@
-package com.github.hoshinotented.achievement.achievements.project
+package com.github.hoshinotented.achievement.achievement.project
 
-import com.github.hoshinotented.achievement.achievements.AbstractAchievement
+import com.github.hoshinotented.achievement.achievement.AbstractAchievement
 import com.github.hoshinotented.achievement.core.ProgressAchievement
 import com.github.hoshinotented.achievement.core.ProjectAchievement
 import com.intellij.execution.ExecutionListener
@@ -39,7 +39,7 @@ class BadExecutionAchievement : AbstractAchievement(
     }
   }
   
-  override suspend fun init(project: Project) {
+  override fun init(project: Project) {
     project.messageBus.connect(this)
       .subscribe(ExecutionManager.EXECUTION_TOPIC, this)
   }

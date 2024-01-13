@@ -1,7 +1,7 @@
-package com.github.hoshinotented.achievement.achievements.project
+package com.github.hoshinotented.achievement.achievement.project
 
 import com.github.hoshinotented.achievement.AchievementPlugin
-import com.github.hoshinotented.achievement.achievements.AbstractAchievement
+import com.github.hoshinotented.achievement.achievement.AbstractAchievement
 import com.github.hoshinotented.achievement.core.ProjectAchievement
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
@@ -38,13 +38,13 @@ class CodeOneDayAchievement : AbstractAchievement(
     })
   }
   
-  override suspend fun init(project : Project) {
+  override fun init(project: Project) {
     synchronized(this) {
       val mJob = job
       if (!isCompleted && (mJob == null || !mJob.isActive)) {
         job = AchievementPlugin.SCOPE.launch {
           delay(ONE_DAY)
-          onComplete()
+          complete()
         }
       }
     }
@@ -53,12 +53,6 @@ class CodeOneDayAchievement : AbstractAchievement(
   private fun onReset() {
     synchronized(this) {
       job?.cancel()
-    }
-  }
-  
-  private fun onComplete() {
-    synchronized(this) {
-      AchievementPlugin.complete(this@CodeOneDayAchievement)
     }
   }
   

@@ -1,6 +1,6 @@
-package com.github.hoshinotented.achievement.services
+package com.github.hoshinotented.achievement.service
 
-import com.github.hoshinotented.achievement.AchievementPlugin
+import com.github.hoshinotented.achievement.AchievementManager
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
@@ -28,9 +28,10 @@ class AchievementData : PersistentStateComponent<AchievementData.MyState> {
   
   override fun getState() : MyState {
     val newState = MyState()
+    val manager = AchievementManager.INSTANCE
     // on save
     // collect data
-    AchievementPlugin.achievements.forEach {
+    manager.achievements().forEach {
       val innerData = HashMap<String, String>()
       it.serialize(innerData)
       
