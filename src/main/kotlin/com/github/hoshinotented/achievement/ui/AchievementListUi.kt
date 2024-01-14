@@ -1,6 +1,6 @@
 package com.github.hoshinotented.achievement.ui
 
-import com.github.hoshinotented.achievement.AchievementPlugin
+import com.github.hoshinotented.achievement.AchievementManager
 import com.intellij.openapi.options.Configurable
 import com.intellij.ui.components.JBScrollPane
 import javax.swing.BoxLayout
@@ -13,7 +13,7 @@ class AchievementListUi : Configurable {
     val list = JPanel()
     list.layout = BoxLayout(list, BoxLayout.Y_AXIS)
     
-    AchievementPlugin.achievements.view()
+    AchievementManager.INSTANCE.achievements()
       .filter { (!it.isHidden) || it.isCompleted }
       .forEach {
         val elem = AchievementElement().initialize(it)
